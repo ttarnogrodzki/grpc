@@ -1057,7 +1057,7 @@ bool Subchannel::PublishTransportLocked() {
   }
 
   // Extract security level from auth context
-  std::string security_level = "";
+  std::string security_level;
   auto auth_context =
       connecting_result_.channel_args.GetObjectRef<grpc_auth_context>();
   if (auth_context != nullptr) {
@@ -1067,12 +1067,13 @@ bool Subchannel::PublishTransportLocked() {
     if (prop != nullptr) {
       std::string tsi_level(prop->value, strlen(prop->value));
       // Map TSI level to metric label format
-      if (tsi_level == "TSI_SECURITY_NONE")
+      if (tsi_level == "TSI_SECURITY_NONE") {
         security_level = "none";
-      else if (tsi_level == "TSI_INTEGRITY_ONLY")
+      } else if (tsi_level == "TSI_INTEGRITY_ONLY") {
         security_level = "integrity_only";
-      else if (tsi_level == "TSI_PRIVACY_AND_INTEGRITY")
+      } else if (tsi_level == "TSI_PRIVACY_AND_INTEGRITY") {
         security_level = "privacy_and_integrity";
+      }
     }
   }
   // Set it on the connected subchannel
