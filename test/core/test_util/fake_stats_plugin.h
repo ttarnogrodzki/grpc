@@ -519,12 +519,14 @@ class FakeStatsPlugin : public StatsPlugin {
                  absl::string_view name, uint64_t value) override {
       if (name != target_name_) return;
       if (label_keys.size() != target_label_keys_.size() ||
-          label_values.size() != target_label_values_.size())
+          label_values.size() != target_label_values_.size()) {
         return;
+      }
       for (size_t i = 0; i < label_keys.size(); ++i) {
         if (label_keys[i] != target_label_keys_[i] ||
-            label_values[i] != target_label_values_[i])
+            label_values[i] != target_label_values_[i]) {
           return;
+        }
       }
       captured_value_ = static_cast<T>(value);
     }
@@ -533,12 +535,14 @@ class FakeStatsPlugin : public StatsPlugin {
                        absl::string_view name, uint64_t value) override {
       if (name != target_name_) return;
       if (label_keys.size() != target_label_keys_.size() ||
-          label_values.size() != target_label_values_.size())
+          label_values.size() != target_label_values_.size()) {
         return;
+      }
       for (size_t i = 0; i < label_keys.size(); ++i) {
         if (label_keys[i] != target_label_keys_[i] ||
-            label_values[i] != target_label_values_[i])
+            label_values[i] != target_label_values_[i]) {
           return;
+        }
       }
       captured_value_ = static_cast<T>(value);
     }
