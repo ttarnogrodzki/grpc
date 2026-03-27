@@ -1398,16 +1398,16 @@ TEST_P(XdsMetricsTest, SubchannelMetricsHaveLocalityAndBackendServiceLabels) {
           "grpc.subchannel.connection_attempts_succeeded",
           {target, kDefaultClusterName, LocalityNameString("locality1")}),
       ::testing::Optional(::testing::Gt(0)));
-  EXPECT_THAT(
-      stats_plugin_->GetInt64MetricValueByName(
-          "grpc.subchannel.open_connections",
-          {target, "none", kDefaultClusterName, LocalityNameString("locality0")}),
-      ::testing::Optional(::testing::Gt(0)));
-  EXPECT_THAT(
-      stats_plugin_->GetInt64MetricValueByName(
-          "grpc.subchannel.open_connections",
-          {target, "none", kDefaultClusterName, LocalityNameString("locality1")}),
-      ::testing::Optional(::testing::Gt(0)));
+  EXPECT_THAT(stats_plugin_->GetInt64MetricValueByName(
+                  "grpc.subchannel.open_connections",
+                  {target, "none", kDefaultClusterName,
+                   LocalityNameString("locality0")}),
+              ::testing::Optional(::testing::Gt(0)));
+  EXPECT_THAT(stats_plugin_->GetInt64MetricValueByName(
+                  "grpc.subchannel.open_connections",
+                  {target, "none", kDefaultClusterName,
+                   LocalityNameString("locality1")}),
+              ::testing::Optional(::testing::Gt(0)));
 }
 
 //
