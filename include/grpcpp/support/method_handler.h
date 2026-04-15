@@ -172,7 +172,10 @@ class RpcMethodHandler : public grpc::internal::MethodHandler {
     }
     UnaryRunHandlerHelper(param, static_cast<BaseResponseType*>(&rsp), status);
     if (pending_tag != nullptr) {
-      grpc_call_cancel_with_status(param.call->call(), static_cast<grpc_status_code>(status.error_code()), "Draining extra requests check tag", nullptr);
+      grpc_call_cancel_with_status(
+          param.call->call(),
+          static_cast<grpc_status_code>(status.error_code()),
+          "Draining extra requests check tag", nullptr);
       gpr_timespec pluck_deadline = gpr_time_add(
           gpr_now(GPR_CLOCK_REALTIME), gpr_time_from_millis(100, GPR_TIMESPAN));
       grpc_event ev = grpc_completion_queue_pluck(
@@ -294,7 +297,10 @@ class ServerStreamingHandler : public grpc::internal::MethodHandler {
     }
     param.call->cq()->Pluck(&ops);
     if (pending_tag != nullptr) {
-      grpc_call_cancel_with_status(param.call->call(), static_cast<grpc_status_code>(status.error_code()), "Draining extra requests check tag", nullptr);
+      grpc_call_cancel_with_status(
+          param.call->call(),
+          static_cast<grpc_status_code>(status.error_code()),
+          "Draining extra requests check tag", nullptr);
       gpr_timespec pluck_deadline = gpr_time_add(
           gpr_now(GPR_CLOCK_REALTIME), gpr_time_from_millis(100, GPR_TIMESPAN));
       grpc_event ev = grpc_completion_queue_pluck(
