@@ -100,6 +100,12 @@ class CardinalityViolationTest : public ::testing::Test {
 // client and the stream is half-closed, the server should report an
 // UNIMPLEMENTED status instead of an INTERNAL error.
 TEST_F(CardinalityViolationTest, UnaryZeroRequests) {
+  const char* experiments = std::getenv("GRPC_EXPERIMENTS");
+  if (experiments != nullptr &&
+      std::string(experiments).find("promise_based_http2_client_transport") !=
+          std::string::npos) {
+    GTEST_SKIP() << "Skipping due to promise based transport limitation";
+  }
   ClientContext context;
   Status status;
   GenericStub generic_stub(channel_);
@@ -122,6 +128,12 @@ TEST_F(CardinalityViolationTest, UnaryZeroRequests) {
 }
 
 TEST_F(CardinalityViolationTest, ServerStreamingZeroRequests) {
+  const char* experiments = std::getenv("GRPC_EXPERIMENTS");
+  if (experiments != nullptr &&
+      std::string(experiments).find("promise_based_http2_client_transport") !=
+          std::string::npos) {
+    GTEST_SKIP() << "Skipping due to promise based transport limitation";
+  }
   ClientContext context;
   Status status;
   GenericStub generic_stub(channel_);
