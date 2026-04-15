@@ -25,6 +25,7 @@
 #include <grpcpp/support/sync_stream.h>
 
 #include <thread>
+
 #include "absl/log/absl_check.h"
 
 namespace grpc {
@@ -62,12 +63,14 @@ inline void CheckForExtraRequests(grpc::internal::Call* call,
   op.flags = 0;
   op.reserved = nullptr;
   op.data.recv_message.recv_message = extra_msg;
-  if (grpc_call_start_batch(call->call(), &op, 1, extra_msg, nullptr) != GRPC_CALL_OK) {
+  if (grpc_call_start_batch(call->call(), &op, 1, extra_msg, nullptr) !=
+      GRPC_CALL_OK) {
     delete extra_msg;
     return;
   }
   gpr_timespec deadline = gpr_time_0(GPR_CLOCK_REALTIME);
-  grpc_event ev = grpc_completion_queue_pluck(call->cq()->cq(), extra_msg, deadline, nullptr);
+  grpc_event ev = grpc_completion_queue_pluck(call->cq()->cq(), extra_msg,
+                                              deadline, nullptr);
   if (ev.type != GRPC_QUEUE_TIMEOUT) {
     if (*extra_msg != nullptr) {
       *status = grpc::Status(grpc::StatusCode::UNIMPLEMENTED, error_message);
@@ -77,7 +80,8 @@ inline void CheckForExtraRequests(grpc::internal::Call* call,
   } else {
     auto* cq = call->cq();
     std::thread([cq, extra_msg]() {
-      grpc_completion_queue_pluck(cq->cq(), extra_msg, gpr_inf_future(GPR_CLOCK_REALTIME), nullptr);
+      grpc_completion_queue_pluck(cq->cq(), extra_msg,
+                                  gpr_inf_future(GPR_CLOCK_REALTIME), nullptr);
       if (*extra_msg != nullptr) grpc_byte_buffer_destroy(*extra_msg);
       delete extra_msg;
     }).detach();
@@ -248,7 +252,8 @@ class ServerStreamingHandler : public grpc::internal::MethodHandler {
                             "received extra request");
     }
     grpc::internal::CallOpSet<grpc::internal::CallOpSendInitialMetadata,
-                              grpc::internal::CallOpServerSendStatus> ops;
+                              grpc::internal::CallOpServerSendStatus>
+        ops;
     if (!param.server_context->sent_initial_metadata_) {
       ops.SendInitialMetadata(&param.server_context->initial_metadata_,
                               param.server_context->initial_metadata_flags());
