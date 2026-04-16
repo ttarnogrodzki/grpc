@@ -19,12 +19,12 @@
 #ifndef GRPCPP_SUPPORT_METHOD_HANDLER_H
 #define GRPCPP_SUPPORT_METHOD_HANDLER_H
 
+#include "absl/log/absl_check.h"
+#include "absl/log/log.h"
 #include <grpc/byte_buffer.h>
 #include <grpcpp/impl/rpc_service_method.h>
 #include <grpcpp/support/byte_buffer.h>
 #include <grpcpp/support/sync_stream.h>
-
-#include "absl/log/absl_check.h"
 
 namespace grpc {
 
@@ -87,10 +87,13 @@ inline void* CheckForExtraRequests(grpc::internal::Call* call,
     return nullptr;
   }
   gpr_timespec deadline = gpr_time_0(GPR_CLOCK_REALTIME);
+  VLOG(2) << "CheckForExtraRequests: plucking with zero deadline";
   grpc_event ev =
       grpc_completion_queue_pluck(call->cq()->cq(), tag, deadline, nullptr);
+  VLOG(2) << "CheckForExtraRequests: pluck returned event type " << ev.type;
   if (ev.type != GRPC_QUEUE_TIMEOUT) {
     if (*extra_msg != nullptr) {
+      VLOG(2) << "CheckForExtraRequests: found extra message";
       *status = grpc::Status(grpc::StatusCode::UNIMPLEMENTED, error_message);
       grpc_byte_buffer_destroy(*extra_msg);
     }
@@ -98,6 +101,7 @@ inline void* CheckForExtraRequests(grpc::internal::Call* call,
     delete tag;
     return nullptr;
   }
+  VLOG(2) << "CheckForExtraRequests: timed out, returning pending tag";
   return tag;
 }
 
