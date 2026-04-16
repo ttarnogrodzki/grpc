@@ -960,8 +960,8 @@ class ReadClient : public grpc::ClientReadReactor<EchoResponse> {
           reads_complete_ == client_cancel_.ops_before_cancel) {
         context_.TryCancel();
       } else {
-        // Even if we cancel, read until failure because there might be responses
-        // pending
+        // Even if we cancel, read until failure because there might be
+        // responses pending
         StartRead(&response_);
       }
     }
