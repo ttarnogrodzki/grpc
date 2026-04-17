@@ -87,7 +87,8 @@ inline void* CheckForExtraRequests(grpc::internal::Call* call,
     delete tag;
     return nullptr;
   }
-  gpr_timespec deadline = gpr_time_add(gpr_now(GPR_CLOCK_REALTIME), gpr_time_from_millis(10, GPR_TIMESPAN));
+  gpr_timespec deadline = gpr_time_add(gpr_now(GPR_CLOCK_REALTIME),
+                                       gpr_time_from_millis(10, GPR_TIMESPAN));
   ABSL_LOG(INFO) << "CheckForExtraRequests: plucking with small deadline";
   grpc_event ev =
       grpc_completion_queue_pluck(call->cq()->cq(), tag, deadline, nullptr);
