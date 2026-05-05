@@ -189,8 +189,9 @@ class TestConfigurator {
     EXPECT_EQ(server_status.status(), GRPC_STATUS_INTERNAL);
     EXPECT_THAT(
         server_status.message(),
-        ::testing::AnyOf(::testing::HasSubstr("Compression algorithm 'gzip' is disabled."),
-                         ::testing::HasSubstr("Compression algorithm not supported: gzip")));
+        ::testing::AnyOf(
+            ::testing::HasSubstr("Compression algorithm 'gzip' is disabled."),
+            ::testing::HasSubstr("Compression algorithm not supported: gzip")));
   }
 
   void RequestWithPayload(
