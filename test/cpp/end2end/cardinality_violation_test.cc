@@ -33,6 +33,7 @@
 #include "test/core/test_util/test_config.h"
 #include "test/cpp/util/byte_buffer_proto_helper.h"
 #include "gtest/gtest.h"
+#include "absl/strings/match.h"
 
 namespace grpc {
 namespace testing {
